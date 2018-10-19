@@ -1,0 +1,42 @@
+#!/usr/bin/env node
+
+'use strict';
+ 
+const nconf = require('nconf');
+const app = require('../app');
+const debug = require('debug')('source:server');
+const http = require('http');
+const winston = require('winston');
+
+const sequelize = require('../config/sequelize');
+
+const port = parseInt(nconf.get('application:port'));
+const server = http.createServer(app);
+
+winston.info('APP started');
+
+app.set('port', port);
+
+sequelize.sequelize.authenticate().then(() => {
+  server.listen(port);
+  server.on('error', onError);
+  server.on('listening', onListening);
+  winston.info('APP MariaDB initialized');
+  winston.info('APP listening on port', port);
+});
+
+/*server.listen(port);
+server.on('error', onError);
+server.on('listening', onListening);
+winston.info('APP MySQL initialized');
+winston.info('APP listening on port', port);*/
+
+function onError(error) {
+  winston.error('Something bad... ', error);
+}
+
+function onListening() {
+  winston.info('Listening...');
+}
+ 
+module.exports = server;

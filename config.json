@@ -1,0 +1,9 @@
+{
+  "application": {
+    "port": 3900,
+    "local": "true"
+  },
+  "logging": {
+    "level": "info"
+  }
+}
